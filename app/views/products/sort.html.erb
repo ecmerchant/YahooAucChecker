@@ -1,0 +1,44 @@
+<div class="bg-success" style="align-items: center;">
+  <h1 style="padding: 10px;">ヤフオク在庫チェッカー&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com" target="_blank">ec-merchant.com</a></small></h1>
+</div>
+<h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'ログアウト', destroy_user_session_path, method: :get %>&nbsp;&nbsp;&nbsp;<%= link_to '管理者専用', rails_admin_path, method: :get %></h4>
+<br>
+<%= form_tag({controller: "products", action: "import", method: "post"}, {multipart: true}) do %>
+
+  <div class="input-group">
+    <label class="input-group-btn">
+        <span class="btn btn-success">
+            CSVファイルの選択<%= file_field_tag :file, style: "display:none;" %>
+        </span>
+    </label>
+    <input type="text" class="form-control" readonly="" style="width:300px;" id="fname">
+  </div>
+  <br>
+  <%= submit_tag "ファイルのインポート", class: "btn btn-success" %>
+<% end %>
+<br>
+<br>
+<%= form_tag(products_sort_path, method: "post") do %>
+  <%= hidden_field_tag :data, "complete!!" %>
+  <%= submit_tag "処理開始", class: "btn btn-success" %>
+<% end %>
+<br>
+<table class="table table-bordered" style="width: 340px;">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>受付時刻</th>
+      <th>終了時刻</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td id="sttime"><%= @sttime %></td>
+      <td id="fntime"><%= @fntime %></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<%= link_to "CSV出力", products_export_path(format: :csv), class: "btn btn-primary" %>
+<br>

@@ -1,0 +1,12 @@
+//Javascript file for Product controller
+
+//HTMLが読み込まれた後にJavasriptを実行する
+window.addEventListener('DOMContentLoaded', function() {
+  var targetfile = document.getElementById('file');
+  targetfile.onchange = function(){
+    alert("ok");
+    var flabel = document.getElementById('fname');
+    var fname = targetfile.value.replace(/\\/g, '/').replace(/.*\//, '');
+    flabel.value = fname;
+  }
+})

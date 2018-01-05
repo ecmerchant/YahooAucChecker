@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  sku: MyString
+  cprice: 1
+  bprice: 1
+  bit: 1
+  rest: 1
+  bitcheck: false
+  restcheck: false
+
+two:
+  user: MyString
+  sku: MyString
+  cprice: 1
+  bprice: 1
+  bit: 1
+  rest: 1
+  bitcheck: false
+  restcheck: false
