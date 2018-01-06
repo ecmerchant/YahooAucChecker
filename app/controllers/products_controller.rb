@@ -34,8 +34,9 @@ class ProductsController < ApplicationController
     if request.post? then
       data = @res2.pluck(:sku)
       target = Product.find_by(user: current_user.email)
-      target.delay.inventory(data)
-      sleep(1)
+      #target.delay.inventory(data)
+      target.inventory(data)
+      sleep(0.5)
       redirect_to products_sort_path
     end
 
@@ -67,10 +68,11 @@ class ProductsController < ApplicationController
   end
 
   def export
-    @products1 = Product.where(user: current_user.email).where(restcheck: true, bitcheck: false)
-    @products2 = Product.where(user: current_user.email).where(restcheck: false, bitcheck: false)
-    @products3 = Product.where(user: current_user.email).where(restcheck: false, bitcheck: true)
-    send_data render_to_string, filename: "hoge1.csv", type: :csv
+    @products1 = Product.where(user: current_user.email).where(restcheck: true)
+    @products2 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: true)
+    @products3 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: false)
+    fname = "在庫結果_" + (DateTime.now.strftime("%Y%m%d%H%M")) + ".csv"
+    send_data render_to_string, filename: fname, type: :csv
   end
 
 end
