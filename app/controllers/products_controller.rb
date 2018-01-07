@@ -34,8 +34,8 @@ class ProductsController < ApplicationController
     if request.post? then
       data = @res2.pluck(:sku)
       target = Product.find_by(user: current_user.email)
-      #target.delay.inventory(data)
-      target.inventory(data)
+      target.delay.inventory(data)
+      #target.inventory(data)
       sleep(0.5)
       redirect_to products_sort_path
     end
