@@ -13,6 +13,7 @@ class Product < ApplicationRecord
       uanum = ua.length
       user_agent = ua[rand(uanum)][0]
       charset = nil
+      #rt = rand(10)*0.1+0.2
       rt = rand(10)*0.1+0.2
       sleep(rt)
       begin
@@ -98,21 +99,25 @@ class Product < ApplicationRecord
           else
             cPrice = 0
           end
-
+          logger.debug("check1")
           bPrice = doc.xpath('//tr[@class="elBidOrBuyPriceRw"]')[0]
           if bPrice != nil then
             taxin = bPrice.xpath('//p[@class="decTxtTaxIncPrice"]')[0].inner_text
+            logger.debug("check2")
+            logger.debug(taxin)
             if taxin == '（税0円）'  then
-              bPrice = bPrice.xpath('//p[@class="decTxtAucPrice"]')[0].inner_text
+              bPrice = bPrice.xpath('//p[@class="decTxtBuyPrice"]')[0].inner_text
+              logger.debug("check3")
               bPrice = bPrice.gsub(/\,/,"").gsub(/円/,"").gsub(/ /,"").to_i
             else
-              bPrice = bPrice.xpath('//p[@class="decTxtAucPrice"]')[0].inner_text
+              bPrice = bPrice.xpath('//p[@class="decTxtBuyPrice"]')[0].inner_text
               bPrice = bPrice[3..(bPrice.length-2)]
               bPrice = bPrice.gsub(/\,/,"").gsub(/円/,"").gsub(/ /,"").to_i
             end
           else
             bPrice = 0
           end
+
           bit = doc.xpath('//b[@property="auction:Bids"]')[0].inner_text.to_i
           rest = 0
           if bit == 0 then
@@ -121,6 +126,7 @@ class Product < ApplicationRecord
             bcheck = false
           end
           rcheck = false
+          logger.debug("check3")
         end
 
       rescue => e
