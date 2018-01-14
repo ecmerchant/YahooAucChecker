@@ -50,7 +50,8 @@ class ProductsController < ApplicationController
     end
     #Product.destroy_all(user: current_user.email)
     if csvfile != nil then
-      ImportDataJob.perform_later(csvfile.path,current_user.email)
+      csv = CSV.table(csvfile.path)
+      ImportDataJob.perform_later(csv,current_user.email)
     end
     redirect_to root_path
   end

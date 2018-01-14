@@ -2,10 +2,8 @@ class ImportDataJob < ApplicationJob
   queue_as :default
   require 'csv'
 
-  def perform(csvpath, user)
+  def perform(csv, user)
     # Do something later
-    csv = CSV.table(csvpath)
-    logger.debug(csv.headers)
     if csv.headers.include?(:sku) then
       logger.debug("sku header")
       for row in csv[:sku] do
