@@ -51,7 +51,11 @@ class ProductsController < ApplicationController
     #Product.destroy_all(user: current_user.email)
     if csvfile != nil then
       csv = CSV.table(csvfile.path)
-      ImportDataJob.perform_later(csv,current_user.email)
+      if csv.headers.include?(:sku) then
+        logger.debug("sku header")
+        td = csv[:sku]
+        ImportDataJob.perform_later(td,current_user.email)
+      end
     end
     redirect_to root_path
   end
