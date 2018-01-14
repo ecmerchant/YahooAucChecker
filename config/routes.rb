@@ -1,3 +1,5 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
 
   root to: 'products#sort'
@@ -9,6 +11,8 @@ Rails.application.routes.draw do
 
   post 'products/export'
   get 'products/export'
+
+  mount Resque::Server.new, at: "/resque"
 
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'

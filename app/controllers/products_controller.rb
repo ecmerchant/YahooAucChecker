@@ -11,31 +11,30 @@ class ProductsController < ApplicationController
     redirect_to root_url, :alert => exception.message
   end
 
-
   def sort
     @user = current_user.email
     @res2 = Product.where(user: current_user.email)
     if @res2[0] != nil then
       @sttime = @res2.first.updated_at.in_time_zone('Tokyo')
-      @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
-      if @fntime - @sttime < 3 then
-        @fntime = nil
-      end
-      if @res2.first.id == @res2.last.id then
-        @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
-      end
-      if @res2.last.created_at == @res2.last.updated_at then
-        if @res2.first.created_at != @res2.first.updated_at then
-          @fntime = "処理中"
+      if @res2.last.end_flg == false then
+        if @res2.first.updated_at.in_time_zone('Tokyo') == @res2.first.created_at.in_time_zone('Tokyo') then
+          @fntime = "処理前"
+        else
+          total = Product.where(user: current_user.email).count.to_s
+          temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
+          @fntime = "処理中 " + temp + "/" + total + "件" 
         end
+      else
+        @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
       end
     end
 
     if request.post? then
       data = @res2.pluck(:sku)
       target = Product.find_by(user: current_user.email)
-      target.delay.inventory(data)
+      #target.delay.inventory(data)
       #target.inventory(data)
+      MyJobJob.perform_later(data,current_user.email)
       sleep(0.5)
       redirect_to products_sort_path
     end
@@ -56,7 +55,8 @@ class ProductsController < ApplicationController
             user: current_user.email,
             sku: row,
             bitcheck: false,
-            restcheck: false
+            restcheck: false,
+            end_flg: false
           )
         end
       else
