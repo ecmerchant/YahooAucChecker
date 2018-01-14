@@ -1,5 +1,6 @@
 class ImportDataJob < ApplicationJob
   queue_as :default
+  require 'csv'
 
   def perform(csvpath, user)
     # Do something later
