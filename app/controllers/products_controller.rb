@@ -22,7 +22,7 @@ class ProductsController < ApplicationController
         else
           total = Product.where(user: current_user.email).count.to_s
           temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
-          @fntime = "処理中 " + temp + "/" + total + "件" 
+          @fntime = "処理中 " + temp + "/" + total + "件"
         end
       else
         @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
@@ -44,25 +44,13 @@ class ProductsController < ApplicationController
 
   def import
     csvfile = params[:file]
-    Product.destroy_all(user: current_user.email)
+    check = Product.where(user: current_user.email)
+    if check != nil then
+      check.delete_all
+    end
+    #Product.destroy_all(user: current_user.email)
     if csvfile != nil then
-      csv = CSV.table(csvfile.path)
-      logger.debug(csv.headers)
-      if csv.headers.include?(:sku) then
-        logger.debug("sku header")
-        for row in csv[:sku] do
-          Product.create(
-            user: current_user.email,
-            sku: row,
-            bitcheck: false,
-            restcheck: false,
-            end_flg: false
-          )
-        end
-      else
-        logger.debug("no header")
-      end
-      #@res = csv
+      ImportDataJob.perform_later(csvfile.path,current_user.email)
     end
     redirect_to root_path
   end
