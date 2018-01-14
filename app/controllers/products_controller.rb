@@ -16,15 +16,16 @@ class ProductsController < ApplicationController
     @res2 = Product.where(user: current_user.email)
     if @res2[0] != nil then
       @sttime = @res2.first.updated_at.in_time_zone('Tokyo')
-      if @res2.last.end_flg == false then
-        if @res2.first.updated_at.in_time_zone('Tokyo') == @res2.first.created_at.in_time_zone('Tokyo') then
-          @fntime = "処理前"
-        else
-          total = Product.where(user: current_user.email).count.to_s
-          temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
-          @fntime = "処理中 " + temp + "/" + total + "件"
-        end
+
+      if @res2.first.updated_at.in_time_zone('Tokyo') == @res2.first.created_at.in_time_zone('Tokyo') then
+        @fntime = "処理前"
       else
+        total = Product.where(user: current_user.email).count.to_s
+        temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
+        @fntime = "処理中 " + temp + "/" + total + "件"
+      end
+
+      if @res2.last.end_flg then
         @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
       end
     end
