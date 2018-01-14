@@ -24,8 +24,9 @@ class ProductsController < ApplicationController
         temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
         @fntime = "処理中 " + temp + "/" + total + "件"
       end
+      temp = @res2.order(id: :desc)
 
-      if @res2.last.end_flg then
+      if temp.first.end_flg then
         @fntime = @res2.last.updated_at.in_time_zone('Tokyo')
       end
     end
