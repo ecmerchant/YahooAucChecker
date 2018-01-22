@@ -70,8 +70,10 @@ gem 'jquery-turbolinks'
 
 # gem for background processing
 gem 'delayed_job_active_record'
- 
+
 gem 'redis'
 gem 'resque'
 
 gem 'daemons'
+
+gem "typhoeus"
