@@ -12,8 +12,8 @@ class MyJobJob < ApplicationJob
       user_agent = ua[rand(uanum)][0]
       charset = nil
       #rt = rand(10)*0.1+0.2
-      rt = rand(10)*0.1+0.2
-      sleep(rt)
+      #rt = rand(10)*0.1+0.2
+      #sleep(rt)
       begin
         html = open(url, "User-Agent" => user_agent) do |f|
         #html = open(url) do |f|
@@ -149,7 +149,5 @@ class MyJobJob < ApplicationJob
         end_flg: true
       )
     end
-
-    #
   end
 end
