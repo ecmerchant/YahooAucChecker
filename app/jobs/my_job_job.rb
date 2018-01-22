@@ -2,7 +2,8 @@ class MyJobJob < ApplicationJob
 
   queue_as :default
   require 'typhoeus'
-
+  require 'objspace'
+  
   def perform(tag, cuser)
     # Do something later
     logger.debug("Process Start")
@@ -156,6 +157,8 @@ class MyJobJob < ApplicationJob
         restcheck: rcheck,
         end_flg: true
       )
+      ObjectSpace.each_object(ActiveRecord::Relation).each(&:reset)
+      GC.start
       logger.debug('Process end')
     end
   end
