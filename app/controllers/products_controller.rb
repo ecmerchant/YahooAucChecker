@@ -20,8 +20,8 @@ class ProductsController < ApplicationController
       if @res2.first.updated_at.in_time_zone('Tokyo') == @res2.first.created_at.in_time_zone('Tokyo') then
         @fntime = "処理前"
       else
-        total = Product.where(user: current_user.email).count.to_s
-        temp = Product.where(user: current_user.email).where(end_flg: true).count.to_s
+        total = @res2.count.to_s
+        temp = @res2.where(end_flg: true).count.to_s
         @fntime = "処理中 " + temp + "/" + total + "件"
       end
       temp = @res2.order(id: :desc)
@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
 
     if request.post? then
       data = @res2.pluck(:sku)
-      target = Product.find_by(user: current_user.email)
+      #target = Product.find_by(user: current_user.email)
       #target.delay.inventory(data)
       #target.inventory(data)
       MyJobJob.perform_later(data,current_user.email)

@@ -20,7 +20,7 @@
 <br>
 <%= form_tag(products_sort_path, method: "post") do %>
   <%= hidden_field_tag :data, "complete!!" %>
-  <%= submit_tag "処理開始", class: "btn btn-success" %>
+  <%= submit_tag "処理開始", class: "btn btn-success", onclick: "btnClick(this)" %>
 <% end %>
 <br>
 <table class="table table-bordered" style="width: 340px;">
@@ -42,3 +42,9 @@
 <br>
 <%= link_to "CSV出力", products_export_path(format: :csv), class: "btn btn-primary" %>
 <br>
+
+<script type="text/javascript">
+    function btnClick(obj){
+        alert(obj.value);
+    }
+</script>
