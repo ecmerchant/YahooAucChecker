@@ -63,9 +63,9 @@ class ProductsController < ApplicationController
   end
 
   def export
-    @products1 = Product.where(user: current_user.email).where(restcheck: true)
-    @products2 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: true)
-    @products3 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: false)
+    @products1 = Product.where(user: current_user.email).where(restcheck: true).where(end_flg: true)
+    @products2 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: true).where(end_flg: true)
+    @products3 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: false).where(end_flg: true)
     fname = "在庫結果_" + (DateTime.now.strftime("%Y%m%d%H%M")) + ".csv"
     send_data render_to_string, filename: fname, type: :csv
   end
