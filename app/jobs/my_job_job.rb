@@ -3,12 +3,13 @@ class MyJobJob < ApplicationJob
   queue_as :default
   require 'typhoeus'
   require 'objspace'
-  
+
   def perform(tag, cuser)
     # Do something later
     logger.debug("Process Start")
     ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
     tag.each do |sku|
+      
       url = 'https://page.auctions.yahoo.co.jp/jp/auction/' + sku
       logger.debug(url)
       uanum = ua.length
