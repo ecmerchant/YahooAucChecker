@@ -11,7 +11,7 @@ class ImportDataJob < ApplicationJob
       row.gsub!("\t", "")
       Product.create(
         user: user,
-        sku: row,
+        sku: row.to_s,
         bitcheck: false,
         restcheck: false,
         end_flg: false
