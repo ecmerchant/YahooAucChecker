@@ -1,0 +1,64 @@
+<div class="bg-success" style="align-items: center;">
+  <h1 style="padding: 10px;">ヤフオク在庫チェッカー&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com" target="_blank">ec-merchant.com</a></small></h1>
+</div>
+<h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'トップ', products_sort_path, method: :get %>&nbsp;&nbsp;&nbsp;<%= link_to 'ログアウト', destroy_user_session_path, method: :get %>&nbsp;&nbsp;&nbsp;<%= link_to '管理者専用', rails_admin_path, method: :get %></h4>
+<br>
+<%= form_for(@users, {url: products_setup_path, method: 'post'}) do |f| %>
+  <fieldset class="form-group">
+  <div class="form-check">
+    <label class="form-check-label">
+      <%= f.radio_button 'conved', 'false', {class: 'form-check-input'}  %>
+      SKU変換なし
+    </label>
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">
+      <%= f.radio_button 'conved', 'true', {class: 'form-check-input'}  %>
+      SKUを変換
+    </label>
+  </div>
+  </fieldset>
+  <div class="actions">
+    <%= f.submit "設定する", {id: "setup_btn", onClick: 'alert("更新しました")'} %>
+  </div>
+<% end %>
+<br>
+<%= form_tag({controller: "products", action: "converse", method: "post"}, {multipart: true}) do %>
+  <div class="input-group">
+    <label class="input-group-btn">
+        <span class="btn btn-success">
+            SKU変換ファイルの選択<%= file_field_tag :file, style: "display:none;" %>
+        </span>
+    </label>
+    <input type="text" class="form-control" readonly="" style="width:300px;" id="fname">
+  </div>
+  <br>
+  <%= submit_tag "ファイルのインポート", class: "btn btn-success" %>
+<% end %>
+
+<br>
+<div style="height:400px; width:380px; overflow-y:scroll;">
+<table class="table table-striped table-hover table-bordered " id="result_table" style="width:380px;" >
+  <thead class="thead-inverse">
+    <tr>
+      <th>SKU</th>
+      <th>変換後</th>
+    </tr>
+  </thead>
+  <% if @products != nil then %>
+  <tbody style="font-size: 11pt;">
+    <% for temp in @products %>
+    <tr>
+      <td style="width:50%;"><%= temp.sku %></td>
+      <td style="width:50%;"><%= temp.code %></td>
+    </tr>
+    <% end %>
+  </tbody>
+  <% end %>
+</table>
+</div>
+<script type="text/javascript">
+    function btnClick(obj){
+        alert(obj.value);
+    }
+</script>

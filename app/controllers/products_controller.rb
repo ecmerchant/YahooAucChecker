@@ -62,12 +62,44 @@ class ProductsController < ApplicationController
     redirect_to root_path
   end
 
+  def setup
+    @user = current_user.email
+    @users = User.find_by(email: @user)
+    @products = Product.where(user: current_user.email)
+    if request.post? then
+      @users.update(user_params)
+    end
+  end
+
   def export
     @products1 = Product.where(user: current_user.email).where(restcheck: true).where(end_flg: true)
     @products2 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: true).where(end_flg: true)
     @products3 = Product.where(user: current_user.email).where(restcheck: false).where(bitcheck: false).where(end_flg: true)
     fname = "在庫結果_" + (DateTime.now.strftime("%Y%m%d%H%M")) + ".csv"
     send_data render_to_string, filename: fname, type: :csv
+  end
+
+  def converse
+    csvfile = params[:file]
+    products = Product.where(user: current_user.email)
+    if csvfile != nil then
+      csv = CSV.read(csvfile.path)
+      CSV.foreach(csvfile.path) do |row|
+        logger.debug("sku:" + row[0].to_s)
+        logger.debug("code:" + row[1].to_s)
+        temp = products.find_by(sku: row[0])
+        if temp != nil then
+          temp.update(code:row[1].to_s)
+        end
+      end
+    end
+
+    redirect_to products_setup_path
+  end
+
+  private
+  def user_params
+     params.require(:user).permit(:conved)
   end
 
 end

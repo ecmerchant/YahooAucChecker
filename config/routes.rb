@@ -7,6 +7,11 @@ Rails.application.routes.draw do
   get 'products/sort'
   post 'products/sort'
 
+  get 'products/setup'
+  post 'products/setup'
+
+  post 'products/converse'
+
   post 'products/import'
 
   post 'products/export'

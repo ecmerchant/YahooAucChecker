@@ -8,8 +8,17 @@ class MyJobJob < ApplicationJob
     # Do something later
     logger.debug("Process Start")
     ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
+    cv = Product.where(user: cuser)
+    temp = User.find_by(email:cuser)
+    logger.debug(temp.conved)
+    jd = temp.conved
     tag.each do |sku|
-      
+      if jd == true then
+        tt = cv.find_by(sku: sku)
+        tsku = tt.code
+        sku = tsku
+      end
+
       url = 'https://page.auctions.yahoo.co.jp/jp/auction/' + sku
       logger.debug(url)
       uanum = ua.length
