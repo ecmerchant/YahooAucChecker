@@ -158,7 +158,17 @@ class MyJobJob < ApplicationJob
         rcheck = false
       end
       logger.debug('Start updating table')
-      Product.find_by(user: cuser, sku: sku).update(
+      #Product.find_by(user: cuser, sku: sku).update(
+      #  cprice: cPrice,
+      #  bprice: bPrice,
+      #  bit: bit,
+      #  rest: rest,
+      #  bitcheck: bcheck,
+      #  restcheck: rcheck,
+      #  end_flg: true
+      #)
+      cv.update(
+        sku: sku,
         cprice: cPrice,
         bprice: bPrice,
         bit: bit,
@@ -167,6 +177,7 @@ class MyJobJob < ApplicationJob
         restcheck: rcheck,
         end_flg: true
       )
+
       ObjectSpace.each_object(ActiveRecord::Relation).each(&:reset)
       GC.start
       logger.debug('Process end')
