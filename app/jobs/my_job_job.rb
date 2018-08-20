@@ -12,6 +12,9 @@ class MyJobJob < ApplicationJob
     temp = User.find_by(email:cuser)
     logger.debug(temp.conved)
     jd = temp.conved
+    uanum = ua.length
+    user_agent = ua[rand(uanum)][0]
+    
     tag.each do |sku|
       if jd == true then
         tt = cv.find_by(sku: sku)
@@ -21,8 +24,7 @@ class MyJobJob < ApplicationJob
 
       url = 'https://page.auctions.yahoo.co.jp/jp/auction/' + sku
       logger.debug(url)
-      uanum = ua.length
-      user_agent = ua[rand(uanum)][0]
+      
       charset = nil
       #rt = rand(10)*0.1+0.2
       #sleep(rt)
