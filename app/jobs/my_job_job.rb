@@ -4,6 +4,11 @@ class MyJobJob < ApplicationJob
   require 'typhoeus'
   require 'objspace'
 
+  rescue_from(StandardError) do |exception|
+   # Do something with the exception
+    logger.error exception
+  end
+
   def perform(tag, cuser)
     # Do something later
     logger.debug("Process Start")
@@ -12,8 +17,8 @@ class MyJobJob < ApplicationJob
     temp = User.find_by(email:cuser)
     logger.debug(temp.conved)
     jd = temp.conved
-    user_agent = ua[rand(uanum)][0]
-
+    user_agent = ua.sample
+    logger.debug("start")
     tag.each do |sku|
       if jd == true then
         tt = cv.find_by(sku: sku)
@@ -21,7 +26,7 @@ class MyJobJob < ApplicationJob
         sku = tsku
       end
 
-      url = 'https://page.auctions.yahoo.co.jp/jp/auction/' + sku
+      url = 'https://page.auctions.yahoo.co.jp/jp/auction/' + sku.to_s
       logger.debug(url)
 
       charset = nil
@@ -51,7 +56,7 @@ class MyJobJob < ApplicationJob
           logger.debug('Item is on sale')
           title = doc.xpath('//h1[@class="ProductTitle__text"]')[0].inner_text
           tc = doc.xpath('//div[@class="Price Price--current"]')[0]
-
+          logger.debug('p1')
           if tc != nil then
             cPrice = tc.xpath('dl/dd[@class="Price__value"]/text()')[0]
             cPrice = cPrice.inner_text.gsub(/\,/,"").gsub(/円/,"").gsub(/ /,"").to_i
@@ -60,6 +65,7 @@ class MyJobJob < ApplicationJob
           end
 
           tb = doc.xpath('//div[@class="Price Price--buynow"]')[0]
+          logger.debug('p2')
           if tb != nil then
             bPrice = tb.xpath('dl/dd[@class="Price__value"]/text()')[0]
             bPrice = bPrice.inner_text.gsub(/\,/,"").gsub(/円/,"").gsub(/ /,"").to_i
@@ -169,16 +175,17 @@ class MyJobJob < ApplicationJob
       #  end_flg: true
       #)
       ttemp = cv.find_by(sku: sku)
-      ttemp.update(
-        cprice: cPrice,
-        bprice: bPrice,
-        bit: bit,
-        rest: rest,
-        bitcheck: bcheck,
-        restcheck: rcheck,
-        end_flg: true
-      )
-
+      if ttemp != nil then
+        ttemp.update(
+          cprice: cPrice,
+          bprice: bPrice,
+          bit: bit,
+          rest: rest,
+          bitcheck: bcheck,
+          restcheck: rcheck,
+          end_flg: true
+        )
+      end 
       ObjectSpace.each_object(ActiveRecord::Relation).each(&:reset)
       GC.start
       logger.debug('Process end')
