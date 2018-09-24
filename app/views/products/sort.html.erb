@@ -21,6 +21,7 @@
 <%= form_tag(products_sort_path, method: "post") do %>
   <%= hidden_field_tag :data, "complete!!" %>
   <%= submit_tag "処理開始", class: "btn btn-success", onclick: "btnClick(this)" %>
+  <b style="color:red;">※サーバへの負荷軽減のため処理開始ボタンを実行する際は時間をあけて下さい</b>
 <% end %>
 <br>
 <table class="table table-bordered" style="width: 340px;">

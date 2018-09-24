@@ -33,10 +33,21 @@ class ProductsController < ApplicationController
 
     if request.post? then
       data = @res2.pluck(:sku)
-      #target = Product.find_by(user: current_user.email)
-      #target.delay.inventory(data)
-      #target.inventory(data)
-      MyJobJob.perform_later(data,current_user.email)
+=begin
+      logger.debug("======01=======")
+      logger.debug(Resque.size(:test_01))
+      status = Resque.size(:test_01)
+      if status > 0 then
+        logger.debug("====== Already Queued =======")
+      else
+        logger.debug("====== Start =======")
+        #MyJobJob.set(queue: :test_01).perform_later(data, current_user.email)
+        MyJobJob.perform_later(data, current_user.email)
+      end
+      logger.debug("======00=======")
+      logger.debug(Resque.size(:test_01))
+=end
+      MyJobJob.perform_later(data, current_user.email)
       sleep(0.5)
       redirect_to products_sort_path
     end
